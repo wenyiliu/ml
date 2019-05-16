@@ -27,6 +27,4 @@ public class Category {
      * 特征空间对应的特征的取值的概率
      */
     private List<Map<Double, Double>> feature;
-
-
 }
