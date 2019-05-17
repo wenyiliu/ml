@@ -18,7 +18,6 @@ public class NaiveBayesModelTest {
 
     @Test
     public void classifier() throws IOException {
-        double classifier = NaiveBayesModel.classifier("鼾症该吃什么药");
-        System.out.println(classifier);
+
     }
 }

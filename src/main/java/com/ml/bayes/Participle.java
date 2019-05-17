@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.hankcs.hanlp.seg.common.Term;
 import com.ml.common.util.HanlpUtil;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -12,14 +11,14 @@ import java.util.List;
  * @date 2019/5/16 14:53
  */
 public class Participle {
-    public static String analyQuery(String queryString) throws IOException {
+
+    public static String analyQuery(String queryString) {
         StringBuilder sb = new StringBuilder();
         List<String> list = Lists.newArrayList();
         List<Term> termList = HanlpUtil.segment.seg(queryString);
         for (Term term : termList) {
             String word = term.word;//从term中获取分词
             String pos = term.nature.toString();//从term中获取标签
-
             if (pos.equals("ill")) { //ill 疾病
                 list.add(word);
                 sb.append("ill ");
@@ -31,11 +30,7 @@ public class Participle {
             }
         }
         System.out.println(sb.toString());
-        double classifier = NaiveBayesModel.classifier(sb.toString());
+        double classifier =BayesClassifier.classifier(sb.toString());
         return QuestionsEnum.getQuestionPattern(classifier);
-    }
-
-    public static void main(String[] args) throws IOException {
-        System.out.println(analyQuery("苯中毒做什么检查"));
     }
 }
