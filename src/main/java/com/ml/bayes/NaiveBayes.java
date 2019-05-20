@@ -49,8 +49,7 @@ public class NaiveBayes {
                     double probability = value.doubleValue() / sampleSpaceLen;
                     category.setProbability(probability);
                     List<double[]> valueList = data.stream().filter(labeledPoint ->
-                            labeledPoint.getLabel().equals(key))
-                            .map(LabeledPoint::getData).collect(Collectors.toList());
+                            labeledPoint.getLabel().equals(key)).map(LabeledPoint::getData).collect(Collectors.toList());
                     List<Map<Double, Double>> feature = dimensionalCount(valueList, featureSpaceLen);
                     category.setFeature(feature);
                     categoryList.add(category);
@@ -69,12 +68,11 @@ public class NaiveBayes {
             int finalI = i;
             data.forEach(d -> {
                 double v = d[finalI];
-                if (countMap.get(v) == null) {
-                    countMap.put(v, 1);
-                } else {
-                    Integer value = countMap.get(v) + 1;
-                    countMap.put(v, value);
+                Integer value = 1;
+                if (countMap.get(v) != null) {
+                    value += countMap.get(v);
                 }
+                countMap.put(v, value);
             });
             countList.add(countMap);
         }
