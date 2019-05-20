@@ -16,14 +16,26 @@ import java.util.stream.Collectors;
 public class NaiveBayes {
 
     /**
-     * 拉普拉斯平滑
+     * Laplace smoothing.In the actual production environment,
+     * the dimension of the feature space is generally large.
+     * Even if each feature is binary data, there are many possible values
+     * in the sample space, while the training data is difficult to meet
+     * such a large amount of data, which will result in the phenomenon
+     * that the probability of some samples is zero.
+     * But "probability zero" and "unobserved" are two completely different concepts,
+     * which should not be confused.So we're going to use the Laplace smoothing here to avoid that.
      */
     private static final Double NI = 1.0;
 
     /**
-     * 训练数据
+     * train naive bayes model.The model we trained is a polynomial model,
+     * which is mostly used to process discrete data. Therefore,
+     * each sample in the training data is an array of the same length.
+     * In this process, we need to calculate the probability of each category
+     * in the sample space. In addition, we need to calculate the probability
+     * of different values of each feature under each category.
      *
-     * @param data
+     * @param data train data
      * @return
      */
     public static NaiveBayesModel train(List<LabeledPoint> data) {
@@ -36,7 +48,8 @@ public class NaiveBayes {
                     category.setIndex(key);
                     double probability = value.doubleValue() / sampleSpaceLen;
                     category.setProbability(probability);
-                    List<double[]> valueList = data.stream().filter(labeledPoint -> labeledPoint.getLabel().equals(key))
+                    List<double[]> valueList = data.stream().filter(labeledPoint ->
+                            labeledPoint.getLabel().equals(key))
                             .map(LabeledPoint::getData).collect(Collectors.toList());
                     List<Map<Double, Double>> feature = dimensionalCount(valueList, featureSpaceLen);
                     category.setFeature(feature);
@@ -46,12 +59,13 @@ public class NaiveBayes {
         model.setCategoryList(categoryList);
         return model;
     }
+
     private static List<Map<Double, Double>> dimensionalCount(List<double[]> data, int len) {
         List<Map<Double, Integer>> countList = Lists.newArrayList();
         for (int i = 0; i < len; i++) {
             Map<Double, Integer> countMap = Maps.newHashMap();
-            countMap.put(0.0,0);
-            countMap.put(1.0,0);
+            countMap.put(0.0, 0);
+            countMap.put(1.0, 0);
             int finalI = i;
             data.forEach(d -> {
                 double v = d[finalI];
@@ -61,7 +75,6 @@ public class NaiveBayes {
                     Integer value = countMap.get(v) + 1;
                     countMap.put(v, value);
                 }
-                countMap.get(v);
             });
             countList.add(countMap);
         }

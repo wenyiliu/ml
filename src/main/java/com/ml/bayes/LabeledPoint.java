@@ -23,7 +23,7 @@ public class LabeledPoint {
     public LabeledPoint() {
 
     }
-    LabeledPoint(Double label, double[] data) {
+    public LabeledPoint(Double label, double[] data) {
         this.label = label;
         this.data = data;
     }

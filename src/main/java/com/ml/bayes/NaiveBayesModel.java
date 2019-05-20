@@ -36,7 +36,7 @@ public class NaiveBayesModel {
             for (int i = 0; i < predictLen; i++) {
                 Map<Double, Double> map = featureList.get(i);
                 double datum = data[i];
-                Double value = map.getOrDefault(datum,0.5);
+                Double value = map.getOrDefault(datum, (double) (1 / map.size()));
                 result = result * value;
             }
             result = result * probability;
@@ -46,4 +46,5 @@ public class NaiveBayesModel {
         list.sort((o1, o2) -> (o2.getValue()).compareTo(o1.getValue()));
         return list.get(0).getKey();
     }
+
 }

@@ -69,6 +69,7 @@
     </dependencies>
 
     <build>
+        <finalName>ml</finalName>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
