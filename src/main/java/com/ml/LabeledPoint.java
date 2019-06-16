@@ -16,7 +16,7 @@ public class LabeledPoint {
     private Integer label;
 
     /**
-     *
+     *标签对应的数据
      */
     private double[] data;
 
