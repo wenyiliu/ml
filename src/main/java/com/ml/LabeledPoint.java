@@ -1,11 +1,11 @@
-package com.ml.bayes;
+package com.ml;
 
 
 import lombok.Data;
 
 /**
- * @auther: liuwenyi
- * @date 2019/5/8 13:15
+ * @author liuwenyi
+ * @date 2019/5/8
  */
 @Data
 public class LabeledPoint {
@@ -13,7 +13,7 @@ public class LabeledPoint {
     /**
      * 分类标签
      */
-    private Double label;
+    private Integer label;
 
     /**
      *
@@ -23,7 +23,7 @@ public class LabeledPoint {
     public LabeledPoint() {
 
     }
-    public LabeledPoint(Double label, double[] data) {
+    public LabeledPoint(Integer label, double[] data) {
         this.label = label;
         this.data = data;
     }

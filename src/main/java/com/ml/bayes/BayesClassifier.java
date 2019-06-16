@@ -3,6 +3,7 @@ package com.ml.bayes;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hankcs.hanlp.seg.common.Term;
+import com.ml.LabeledPoint;
 import com.ml.common.util.HanlpUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * @auther: liuwenyi
+ * @author liuwenyi
  * @date 2019/5/16 20:27
  */
 @Slf4j
@@ -106,7 +107,7 @@ public class BayesClassifier {
      *
      * @return
      */
-    public static double classifier(String sentence) {
+    public static Integer classifier(String sentence) {
         NaiveBayesModel model = NaiveBayes.train(getTrainDataList());
         double[] arr = sentencesToArrays(sentence);
         return model.predict(arr);
@@ -133,14 +134,19 @@ public class BayesClassifier {
     }
     private static void deleteDir(String path) {
         File file = new File(path);
-        String[] content = file.list();//取得当前目录下所有文件和文件夹
+        //取得当前目录下所有文件和文件夹
+        String[] content = file.list();
         for (String name : Objects.requireNonNull(content)) {
             File temp = new File(path, name);
-            if (temp.isDirectory()) {//判断是否是目录
-                deleteDir(temp.getAbsolutePath());//递归调用，删除目录里的内容
-                temp.delete();//删除空目录
+            //判断是否是目录
+            if (temp.isDirectory()) {
+                //递归调用，删除目录里的内容
+                deleteDir(temp.getAbsolutePath());
+                //删除空目录
+                temp.delete();
             } else {
-                if (!temp.delete()) {//直接删除文件
+                //直接删除文件
+                if (!temp.delete()) {
                     log.error("删除文件：{}，失败", name);
                 }
             }

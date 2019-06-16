@@ -2,6 +2,7 @@ package com.ml.bayes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.ml.LabeledPoint;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @auther: liuwenyi
+ * @author liuwenyi
  * @date 2019/5/8 13:28
  */
 @Slf4j

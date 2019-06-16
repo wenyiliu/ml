@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @auther: liuwenyi
+ * @author liuwenyi
  * @date 2019/5/15 13:15
  */
 @Data
@@ -16,7 +16,7 @@ public class Category {
     /**
      * 类别索引
      */
-    private Double index;
+    private Integer index;
 
     /**
      * 该类别在样本空间的概率
