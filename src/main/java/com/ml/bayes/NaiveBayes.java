@@ -39,35 +39,35 @@ public class NaiveBayes {
      * @param data train data
      * @return
      */
-    public static NaiveBayesModel train(List<LabeledPoint> data) {
+    static NaiveBayesModel train(List<LabeledPoint> data) {
         List<Category> categoryList = Lists.newArrayList();
         int sampleSpaceLen = data.size();
         int featureSpaceLen = data.get(0).getData().length;
         data.stream().collect(Collectors.groupingBy(LabeledPoint::getLabel, Collectors.counting()))
                 .forEach((key, value) -> {
-                    Category category = new Category();
-                    category.setIndex(key);
-                    double probability = value.doubleValue() / sampleSpaceLen;
-                    category.setProbability(probability);
                     List<double[]> valueList = data.stream().filter(labeledPoint ->
-                            labeledPoint.getLabel().equals(key)).map(LabeledPoint::getData).collect(Collectors.toList());
+                            labeledPoint.getLabel().equals(key)).map(LabeledPoint::getData)
+                            .collect(Collectors.toList());
                     List<Map<Double, Double>> feature = dimensionalCount(valueList, featureSpaceLen);
-                    category.setFeature(feature);
-                    categoryList.add(category);
+                    categoryList.add(Category.builder()
+                            .index(key)
+                            .probability(value.doubleValue() / sampleSpaceLen)
+                            .feature(feature)
+                            .build());
                 });
         NaiveBayesModel model = new NaiveBayesModel();
         model.setCategoryList(categoryList);
         return model;
     }
 
-    private static List<Map<Double, Double>> dimensionalCount(List<double[]> data, int len) {
+    private static List<Map<Double, Double>> dimensionalCount(List<double[]> datas, int len) {
         List<Map<Double, Integer>> countList = Lists.newArrayList();
         for (int i = 0; i < len; i++) {
             Map<Double, Integer> countMap = Maps.newHashMap();
             countMap.put(0.0, 0);
             countMap.put(1.0, 0);
             int finalI = i;
-            data.forEach(d -> {
+            datas.forEach(d -> {
                 double v = d[finalI];
                 Integer value = 1;
                 if (countMap.get(v) != null) {
@@ -81,7 +81,7 @@ public class NaiveBayes {
         countList.forEach(map -> {
             Map<Double, Double> rateMap = Maps.newHashMap();
             map.forEach((key, value) -> {
-                double rate = (value + NI) / (data.size() + NI * map.size());
+                double rate = (value + NI) / (datas.size() + NI * map.size());
                 rateMap.put(key, rate);
             });
             rateList.add(rateMap);

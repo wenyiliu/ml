@@ -1,6 +1,7 @@
 package com.ml;
 
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -8,6 +9,7 @@ import lombok.Data;
  * @date 2019/5/8
  */
 @Data
+@Builder
 public class LabeledPoint {
 
     /**

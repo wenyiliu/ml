@@ -1,6 +1,7 @@
 package com.ml.bayes;
 
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
  * @date 2019/5/15 13:15
  */
 @Data
+@Builder
 public class Category {
 
     /**

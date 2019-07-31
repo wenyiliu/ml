@@ -6,11 +6,13 @@ import com.hankcs.hanlp.seg.common.Term;
 import com.ml.LabeledPoint;
 import com.ml.common.util.HanlpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -69,14 +71,8 @@ public class BayesClassifier {
         //创建一个vector数组，默认值为0.0
         double[] vector = new double[keyWordMap.size()];
         List<Term> termList = HanlpUtil.segment.seg(sentence);
-        termList.forEach(term -> {
-            String word = term.word;
-            //分词工具分词后与关键词做匹配，存在将对应的数组值设置为1.0
-            if (keyWordMap.containsKey(word)) {
-                int index = keyWordMap.get(word);
-                vector[index] = 1.0;
-            }
-        });
+        termList.stream().filter(term -> keyWordMap.containsKey(term.word))
+                .map(term -> vector[keyWordMap.get(term.word)] = 1.0);
         return vector;
     }
 
@@ -92,11 +88,10 @@ public class BayesClassifier {
         List<LabeledPoint> list = Lists.newArrayList();
         for (QuestionsEnum question : QuestionsEnum.values()) {
             List<String> lineList = loadFile(question.getFilePath());
-            lineList.forEach(line -> {
-                double[] arr = sentencesToArrays(line);
-                LabeledPoint trainData = new LabeledPoint(question.getIndex(), arr);
-                list.add(trainData);
-            });
+            lineList.stream().map(line -> list.add(LabeledPoint.builder()
+                    .label(question.getIndex())
+                    .data(sentencesToArrays(line))
+                    .build()));
         }
         return list;
     }
@@ -119,19 +114,21 @@ public class BayesClassifier {
      * @return
      */
     private static Map<String, Integer> extractKeyWord() {
-        Map<String, Integer> vocabulary = Maps.newHashMap();
         List<String> list = Lists.newLinkedList();
         for (QuestionsEnum q : QuestionsEnum.values()) {
             List<String> lineList = loadFile(q.getFilePath());
-            lineList.forEach(line -> {
-                List<Term> termList = HanlpUtil.segment.seg(line);
-                termList.forEach(term -> list.add(term.word));
-            });
+            lineList.stream().map(line -> HanlpUtil.segment.seg(line).stream()
+                    .map(term -> list.add(term.word)));
         }
+        if (CollectionUtils.isEmpty(list)){
+            return Collections.emptyMap();
+        }
+        Map<String, Integer> vocabulary = Maps.newHashMap();
         List<String> keyWordList = list.stream().distinct().collect(Collectors.toList());
         keyWordList.forEach(keyword -> vocabulary.put(keyword, keyWordList.indexOf(keyword)));
         return vocabulary;
     }
+
     private static void deleteDir(String path) {
         File file = new File(path);
         //取得当前目录下所有文件和文件夹
